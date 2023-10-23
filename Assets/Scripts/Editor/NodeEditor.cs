@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CyclesGen.Editor
+namespace Editor
 {
     public class NodeEditor : MonoBehaviour
     {

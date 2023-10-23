@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CyclesGen.Core
+namespace Core
 {
     public interface INode
     {

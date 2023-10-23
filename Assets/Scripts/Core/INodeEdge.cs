@@ -1,8 +1,8 @@
-﻿namespace CyclesGen.Core
+﻿namespace Core
 {
     public interface INodeEdge
     {
-        Node From { get; }
-        Node To { get; }
+        INode From { get; }
+        INode To { get; }
     }
 }

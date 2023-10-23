@@ -1,14 +1,14 @@
-﻿namespace CyclesGen.Core
+﻿namespace Core
 {
     public class Edge : INodeEdge
     {
-        public Edge(Node from, Node to)
+        public Edge(INode from, INode to)
         {
             From = from;
             To = to;
         }
 
-        public Node From { get; }
-        public Node To { get; }
+        public INode From { get; }
+        public INode To { get; }
     }
 }

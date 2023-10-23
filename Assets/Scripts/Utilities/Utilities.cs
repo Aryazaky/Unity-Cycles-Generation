@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CyclesGen.Utilities
+namespace Utilities
 {
     public class Utilities : MonoBehaviour
     {
