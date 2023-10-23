@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Core
+namespace Core.Nodes
 {
-    public class Node : INode
+    public class PositionNode : INode
     {
         private readonly Vector3 position;
         private readonly List<INodeEdge> edges = new();
 
-        public Node(Vector3 position)
+        public PositionNode(Vector3 position)
         {
             this.position = position;
         }

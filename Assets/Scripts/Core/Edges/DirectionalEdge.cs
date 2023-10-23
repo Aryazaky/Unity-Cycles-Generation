@@ -1,8 +1,8 @@
-﻿namespace Core
+﻿namespace Core.Edges
 {
-    public class Edge : INodeEdge
+    public class DirectionalEdge : INodeEdge
     {
-        public Edge(INode from, INode to)
+        public DirectionalEdge(INode from, INode to)
         {
             From = from;
             To = to;
