@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace CyclesGen
+namespace CyclesGen.Editor
 {
     public class NodeEditor : MonoBehaviour
     {

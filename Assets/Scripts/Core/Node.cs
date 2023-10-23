@@ -1,21 +1,23 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CyclesGen
+namespace CyclesGen.Core
 {
-    public class Node : MonoBehaviour
+    public class Node : INode
     {
-        // Start is called before the first frame update
-        void Start()
+        private readonly Vector3 position;
+        private readonly List<INodeEdge> edges = new();
+
+        public Node(Vector3 position)
         {
-        
+            this.position = position;
         }
 
-        // Update is called once per frame
-        void Update()
+        public void AddNeighbor(INodeEdge edge)
         {
-        
+            edges.Add(edge);
         }
+
+        public IEnumerable<INodeEdge> Edges => edges;
     }
 }

@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace CyclesGen
+namespace CyclesGen.Utilities
 {
     public class Utilities : MonoBehaviour
     {
