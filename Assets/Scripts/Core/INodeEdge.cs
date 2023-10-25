@@ -2,7 +2,8 @@
 {
     public interface INodeEdge
     {
-        INode From { get; }
-        INode To { get; }
+        INode NodeA { get; }
+        INode NodeB { get; }
+        INode GetOtherNode(INode node);
     }
 }

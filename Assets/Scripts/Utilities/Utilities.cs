@@ -1,19 +1,10 @@
+using System.Collections.Generic;
+using Core;
 using UnityEngine;
 
 namespace Utilities
 {
-    public class Utilities : MonoBehaviour
+    public class Utilities
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
     }
 }
