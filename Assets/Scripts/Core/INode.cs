@@ -6,4 +6,10 @@ namespace Core
     {
         IEnumerable<INodeEdge> Edges { get; }
     }
+    
+    public interface INodeTag<T>
+    {
+        IEnumerable<T> Tags { get; }
+        bool CompareTag(T tag);
+    }
 }

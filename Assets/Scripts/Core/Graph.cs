@@ -18,12 +18,37 @@ namespace Core
             else throw new Exception("There is a lone island unconnected");
         }
 
-        public bool Contains(Graph other)
+        public bool IsVertexInducedSubgraphOf(Graph other)
         {
-            // Use adjacency check
-            throw new NotImplementedException();
+            // Check if all nodes from this graph are present in the other graph
+            if (nodes.All(node => other.nodes.Contains(node)))
+            {
+                // Check if all edges between nodes in this graph are also present in the other graph
+                foreach (var node in nodes)
+                {
+                    foreach (var edge in node.Edges)
+                    {
+                        var otherNodeA = other.nodes.FirstOrDefault(n => n.Equals(edge.NodeA));
+                        var otherNodeB = other.nodes.FirstOrDefault(n => n.Equals(edge.NodeB));
+                    
+                        // If the edge is not present in the other graph, return false
+                        if (otherNodeA == null || otherNodeB == null ||
+                            !otherNodeA.Edges.Any(e => e.GetOtherNode(otherNodeA).Equals(otherNodeB)))
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                // All nodes and edges are present in the other graph
+                return true;
+            }
+
+            // Not all nodes are present in the other graph
+            return false;
         }
     }
+
     
     public static class GraphUtils
     {
