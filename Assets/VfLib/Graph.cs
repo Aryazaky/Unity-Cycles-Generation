@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 #if NUNIT
 using NUnit.Framework;
 #endif
 
-namespace vflibcs
+namespace VfLib
 {
 	public class Graph : IGraphLoader
 	{
@@ -19,13 +18,13 @@ namespace vflibcs
 		{
 			public int _idFrom = _nidIllegal;
 			public int _idTo = _nidIllegal;
-			public object _attr = null;
+			public object _attribute = null;
 		}
 
 		internal class nNode
 		{
 			public int _id = _nidIllegal;
-			public object _attr = null;
+			public object _attribute = null;
 			public SortedList<int, eNode> _edgesFrom = new SortedList<int, eNode>();	// Key is named id of "to" node
 			public List<eNode> _edgesTo = new List<eNode>();
 
@@ -83,24 +82,24 @@ namespace vflibcs
 		internal Graph IsomorphicShuffling(Random rnd)
 		{
 			Graph graph = new Graph();
-			int[] ariShuffle = new int[NodeCount];
+			int[] intArrayShuffle = new int[NodeCount];
 
 			for (int i = 0; i < NodeCount; i++)
 			{
-				ariShuffle[i] = i;
+				intArrayShuffle[i] = i;
 			}
-			Shuffle<int>(ariShuffle, rnd);
+			Shuffle<int>(intArrayShuffle, rnd);
 
 			graph.InsertNodes(NodeCount);
 
-			for (int inod = 0; inod < NodeCount; inod++)
+			for (int nodeId = 0; nodeId < NodeCount; nodeId++)
             {
-				int inodShuffled = ariShuffle[inod];
-				nNode nod = _nodes[inodShuffled];
+				int nodeIdShuffled = intArrayShuffle[nodeId];
+				nNode nod = _nodes[nodeIdShuffled];
 
 				foreach (eNode end in nod._edgesFrom.Values)
 				{
-					graph.InsertEdge(ariShuffle[PosFromId(end._idFrom)], ariShuffle[PosFromId(end._idTo)]);
+					graph.InsertEdge(intArrayShuffle[PosFromId(end._idFrom)], intArrayShuffle[PosFromId(end._idTo)]);
 				}
 
             }
@@ -120,9 +119,9 @@ namespace vflibcs
 			return null;
 		}
 		
-		public int IdFromPos(int inod)
+		public int IdFromPos(int nodeId)
 		{
-			return _nodes.Values[inod]._id;
+			return _nodes.Values[nodeId]._id;
 		}
 
 		public int PosFromId(int nid)
@@ -130,9 +129,9 @@ namespace vflibcs
 			return _nodes.IndexOfKey(nid);
 		}
 
-        public object GetNodeAttr(int id)
+        public object GetNodeAttribute(int id)
 		{
-        	return FindNode(id)._attr;
+        	return FindNode(id)._attribute;
         }
 
 		public int InEdgeCount(int id)
@@ -145,7 +144,7 @@ namespace vflibcs
 			return (int)(FindNode(id)._edgesFrom.Count);
 		}
 
-		public int GetInEdge(int idTo, int pos, out object attr)
+		public int GetInEdge(int idTo, int pos, out object attribute)
 		{
 			eNode end = null;
 			try
@@ -157,11 +156,11 @@ namespace vflibcs
 				VfException.Error("Inconsistent data");
 			}
 
-			attr = end._attr;
+			attribute = end._attribute;
 			return end._idFrom;
 		}
 
-		public int GetOutEdge(int idFrom, int pos, out object attr)
+		public int GetOutEdge(int idFrom, int pos, out object attribute)
 		{
 			eNode end = null;
 			try
@@ -173,17 +172,17 @@ namespace vflibcs
 				VfException.Error("Inconsistent data");
 			}
 
-			attr = end._attr;
+			attribute = end._attribute;
 			return end._idTo;
 		}
 		#endregion
 
 		#region Insertion/Deletion
-		public int InsertNode(object attr)
+		public int InsertNode(object attribute)
 		{
 			nNode nod = new nNode();
 			nod._id = (int)(_nodes.Count);
-			nod._attr = attr;
+			nod._attribute = attribute;
 			_nodes.Add(nod._id, nod);
 			return nod._id;
 		}
@@ -193,13 +192,13 @@ namespace vflibcs
 			return InsertNode(null);
 		}
 
-		public int InsertNodes(int cnod, object attr)
+		public int InsertNodes(int cnod, object attribute)
 		{
-			int nid = InsertNode(attr);
+			int nid = InsertNode(attribute);
 
 			for (int i = 0; i < cnod - 1; i++)
 			{
-				InsertNode(attr);
+				InsertNode(attribute);
 			}
 
 			return nid;
@@ -216,7 +215,7 @@ namespace vflibcs
 			return nid;
 		}
 
-		public void InsertEdge(int nidFrom, int nidTo, object attr)
+		public void InsertEdge(int nidFrom, int nidTo, object attribute)
 		{
         	eNode end = new eNode();
 			nNode nodFrom = FindNode(nidFrom);
@@ -224,7 +223,7 @@ namespace vflibcs
 
 			end._idFrom = nidFrom;
 			end._idTo = nidTo;
-			end._attr = attr;
+			end._attribute = attribute;
 			try
 			{
 				nodFrom._edgesFrom.Add(nidTo, end);
@@ -302,15 +301,15 @@ namespace vflibcs
 			[Test]
 			public void TestInsertEdge()
 			{
-				object attr;
+				object attribute;
 				Graph gr = new Graph();
 				int idFrom = gr.InsertNode(0);
 				int idTo = gr.InsertNode(1);
 				gr.InsertEdge(idFrom, idTo, 100);
 				Assert.AreEqual(gr.OutEdgeCount(idFrom), 1);
 				Assert.AreEqual(gr.OutEdgeCount(idTo), 0);
-				int idEdge = gr.GetOutEdge(idFrom, 0, out attr);
-				Assert.AreEqual(100, (int)attr);
+				int idEdge = gr.GetOutEdge(idFrom, 0, out attribute);
+				Assert.AreEqual(100, (int)attribute);
 				Assert.AreEqual(idTo, idEdge);
 
 				// Try inserting the same edge twice to trigger exception...
@@ -362,22 +361,22 @@ namespace vflibcs
 			{
 				Random rnd = new Random(10);
 				int count = 100;
-				int[] ariShuffle = new int[count];
+				int[] intArrayShuffle = new int[count];
 
 				for (int i = 0; i < count; i++)
 				{
-					ariShuffle[i] = i;
+					intArrayShuffle[i] = i;
 				}
-				Assert.AreEqual(0, ariShuffle[0]);
-				Assert.AreEqual(99, ariShuffle[99]);
-				Shuffle<int>(ariShuffle, rnd);
-				Assert.AreNotEqual(0, ariShuffle[0]);
-				Assert.AreNotEqual(99, ariShuffle[99]);
+				Assert.AreEqual(0, intArrayShuffle[0]);
+				Assert.AreEqual(99, intArrayShuffle[99]);
+				Shuffle<int>(intArrayShuffle, rnd);
+				Assert.AreNotEqual(0, intArrayShuffle[0]);
+				Assert.AreNotEqual(99, intArrayShuffle[99]);
 
 				int iTotal = 0;
 				for (int i = 0; i < count; i++)
 				{
-					iTotal += ariShuffle[i];
+					iTotal += intArrayShuffle[i];
 				}
 				Assert.AreEqual(count * (count - 1) / 2, iTotal);
 			}

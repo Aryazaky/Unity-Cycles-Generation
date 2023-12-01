@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace vflibcs
+namespace VfLib
 {
 	[Flags]
 	enum Groups
@@ -18,18 +17,18 @@ namespace vflibcs
 		#region Private Variables
 		VfeNode[] _arvfeEdgeOut;
 		VfeNode[] _arvfeEdgeIn;
-		object _objAttr;
+		object _objAttribute;
 		Groups _grps = Groups.Disconnected;
 		#endregion
 
 		#region Constructor
-		internal VfnNode(IGraphLoader loader, int inodGraph, Dictionary<VfeNode, VfeNode> dctEdge, int[] mpInodGraphInodVf)
+		internal VfnNode(IGraphLoader loader, int nodeIdGraph, Dictionary<VfeNode, VfeNode> dctEdge, int[] mpnodeIdGraphnodeIdVf)
 		{
-			int nid = loader.IdFromPos(inodGraph);
-			_objAttr = loader.GetNodeAttr(nid);
+			int nid = loader.IdFromPos(nodeIdGraph);
+			_objAttribute = loader.GetNodeAttribute(nid);
 			_arvfeEdgeOut = new VfeNode[loader.OutEdgeCount(nid)];
 			_arvfeEdgeIn = new VfeNode[loader.InEdgeCount(nid)];
-			MakeEdges(loader, nid, dctEdge, mpInodGraphInodVf);
+			MakeEdges(loader, nid, dctEdge, mpnodeIdGraphnodeIdVf);
 		}
 		#endregion
 
@@ -42,11 +41,11 @@ namespace vflibcs
 		}
 
 
-		internal object Attr
+		internal object Attribute
 		{
 			get
 			{
-				return _objAttr;
+				return _objAttribute;
 			}
 		}
 
@@ -73,7 +72,7 @@ namespace vflibcs
 				List<int> lstOut = new List<int>(_arvfeEdgeOut.Length);
 				foreach (VfeNode vfe in _arvfeEdgeOut)
 				{
-					lstOut.Add(vfe._inodTo);
+					lstOut.Add(vfe._nodeIdTo);
 				}
 				return lstOut;
 			}
@@ -85,7 +84,7 @@ namespace vflibcs
 				List<int> lstIn = new List<int>(_arvfeEdgeIn.Length);
 				foreach (VfeNode vfe in _arvfeEdgeIn)
 				{
-					lstIn.Add(vfe._inodFrom);
+					lstIn.Add(vfe._nodeIdFrom);
 				}
 				return lstIn;
 			}
@@ -98,29 +97,29 @@ namespace vflibcs
 		#endregion
 
 		#region Edge Makers
-		private void MakeEdges(IGraphLoader loader, int nid, Dictionary<VfeNode, VfeNode> dctEdge, int[] mpInodGraphInodVf)
+		private void MakeEdges(IGraphLoader loader, int nid, Dictionary<VfeNode, VfeNode> dctEdge, int[] mpnodeIdGraphnodeIdVf)
 		{
-			int inodGraph = loader.PosFromId(nid);
-			int inodVf = mpInodGraphInodVf[inodGraph];
+			int nodeIdGraph = loader.PosFromId(nid);
+			int nodeIdVf = mpnodeIdGraphnodeIdVf[nodeIdGraph];
 			VfeNode vfeKey = new VfeNode(0, 0, null);
 
-			vfeKey._inodFrom = inodVf;
-			MakeOutEdges(loader, nid, dctEdge, mpInodGraphInodVf, ref vfeKey);
-			vfeKey._inodTo = inodVf;
-			MakeInEdges(loader, nid, dctEdge, mpInodGraphInodVf, ref vfeKey);
+			vfeKey._nodeIdFrom = nodeIdVf;
+			MakeOutEdges(loader, nid, dctEdge, mpnodeIdGraphnodeIdVf, ref vfeKey);
+			vfeKey._nodeIdTo = nodeIdVf;
+			MakeInEdges(loader, nid, dctEdge, mpnodeIdGraphnodeIdVf, ref vfeKey);
 		}
 
-		private void MakeOutEdges(IGraphLoader loader, int nid, Dictionary<VfeNode, VfeNode> dctEdge, int[] mpInodGraphInodVf, ref VfeNode vfeKey)
+		private void MakeOutEdges(IGraphLoader loader, int nid, Dictionary<VfeNode, VfeNode> dctEdge, int[] mpnodeIdGraphnodeIdVf, ref VfeNode vfeKey)
 		{
-			object attr;
+			object attribute;
 			for (int i = 0; i < loader.OutEdgeCount(nid); i++)
 			{
-				vfeKey._inodTo = mpInodGraphInodVf[loader.PosFromId(loader.GetOutEdge(nid, i, out attr))];
+				vfeKey._nodeIdTo = mpnodeIdGraphnodeIdVf[loader.PosFromId(loader.GetOutEdge(nid, i, out attribute))];
 
 				if (!dctEdge.ContainsKey(vfeKey))
 				{
-					_arvfeEdgeOut[i] = dctEdge[vfeKey] = new VfeNode(vfeKey._inodFrom, vfeKey._inodTo, attr);
-					vfeKey = new VfeNode(vfeKey._inodFrom, vfeKey._inodTo, null);
+					_arvfeEdgeOut[i] = dctEdge[vfeKey] = new VfeNode(vfeKey._nodeIdFrom, vfeKey._nodeIdTo, attribute);
+					vfeKey = new VfeNode(vfeKey._nodeIdFrom, vfeKey._nodeIdTo, null);
 				}
 				else
 				{
@@ -129,17 +128,17 @@ namespace vflibcs
 			}
 		}
 
-		private void MakeInEdges(IGraphLoader loader, int nid, Dictionary<VfeNode, VfeNode> dctEdge, int[] mpInodGraphInodVf, ref VfeNode vfeKey)
+		private void MakeInEdges(IGraphLoader loader, int nid, Dictionary<VfeNode, VfeNode> dctEdge, int[] mpnodeIdGraphnodeIdVf, ref VfeNode vfeKey)
 		{
-			object attr;
+			object attribute;
 			for (int i = 0; i < loader.InEdgeCount(nid); i++)
 			{
-				vfeKey._inodFrom = mpInodGraphInodVf[loader.PosFromId(loader.GetInEdge(nid, i, out attr))];
+				vfeKey._nodeIdFrom = mpnodeIdGraphnodeIdVf[loader.PosFromId(loader.GetInEdge(nid, i, out attribute))];
 
 				if (!dctEdge.ContainsKey(vfeKey))
 				{
-					_arvfeEdgeIn[i] = dctEdge[vfeKey] = new VfeNode(vfeKey._inodFrom, vfeKey._inodTo, attr);
-					vfeKey = new VfeNode(vfeKey._inodFrom, vfeKey._inodTo, null);
+					_arvfeEdgeIn[i] = dctEdge[vfeKey] = new VfeNode(vfeKey._nodeIdFrom, vfeKey._nodeIdTo, attribute);
+					vfeKey = new VfeNode(vfeKey._nodeIdFrom, vfeKey._nodeIdTo, null);
 				}
 				else
 				{

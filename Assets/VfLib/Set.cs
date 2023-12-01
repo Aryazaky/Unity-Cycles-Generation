@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace vflibcs
+namespace VfLib
 {
 	class Set<T> : ICollection<T>
 	{

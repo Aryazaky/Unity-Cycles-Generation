@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace vflibcs
+namespace VfLib
 {
 	public interface IGraphLoader
 	{
@@ -12,16 +8,16 @@ namespace vflibcs
 		// correspond to their indices.  However if node 0 is deleted then we have the nodes
 		// 1 and 2 in positions 0 and 1 so their id's don't correspond to their indices.
 		//
-		// These two types of identifiers are identified as nid for their id and inod for their
+		// These two types of identifiers are identified as nid for their id and nodeId for their
 		// index in a list.  There is a way to swap back and forth for vertex nodes with IdFromPos
-		// and PosFromId.  The edges are always identified by inod's.
+		// and PosFromId.  The edges are always identified by nodeId's.
 		int NodeCount { get; }
-		int IdFromPos(int inod);
-		object GetNodeAttr(int nid);
+		int IdFromPos(int nodeId);
+		object GetNodeAttribute(int nid);
 		int OutEdgeCount(int nid);
-		int GetOutEdge(int nid, int inodEdge, out object attr);
+		int GetOutEdge(int nid, int nodeIdEdge, out object attribute);
 		int InEdgeCount(int cEdge);
-		int GetInEdge(int nid, int inodEdge, out object attr);
+		int GetInEdge(int nid, int nodeIdEdge, out object attribute);
 		int PosFromId(int nid);
 	}
 }

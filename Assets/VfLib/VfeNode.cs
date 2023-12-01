@@ -1,36 +1,34 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace vflibcs
+namespace VfLib
 {
 	class VfeNode : IEquatable<VfeNode>
 	{
 		#region Private Variables
-		internal int _inodFrom;
-		internal int _inodTo;
-		internal object _objAttr;
+		internal int _nodeIdFrom;
+		internal int _nodeIdTo;
+		internal object _objAttribute;
 		#endregion
 
 		#region Constructor
-		internal VfeNode(int inodFrom, int inodTo, object objAttr)
+		internal VfeNode(int nodeIdFrom, int nodeIdTo, object objAttribute)
 		{
-			_inodFrom = inodFrom;
-			_inodTo = inodTo;
-			_objAttr = objAttr;
+			_nodeIdFrom = nodeIdFrom;
+			_nodeIdTo = nodeIdTo;
+			_objAttribute = objAttribute;
 		}
 		#endregion
 
 		#region Hashing
 		public override int GetHashCode()
 		{
-			int iTest = _inodTo.GetHashCode();
-			return ((_inodFrom << 16) + _inodTo).GetHashCode();
+			int iTest = _nodeIdTo.GetHashCode();
+			return ((_nodeIdFrom << 16) + _nodeIdTo).GetHashCode();
 		}
 
 		public bool Equals(VfeNode other)
 		{
-			return (other != null) && (other._inodFrom.Equals(_inodFrom) && other._inodTo.Equals(_inodTo));
+			return (other != null) && (other._nodeIdFrom.Equals(_nodeIdFrom) && other._nodeIdTo.Equals(_nodeIdTo));
 		}
 		#endregion
 	}

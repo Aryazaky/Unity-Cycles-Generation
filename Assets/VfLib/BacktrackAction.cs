@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 #if NUNIT
 using NUnit.Framework;
 #endif
 
-namespace vflibcs
+namespace VfLib
 {
 	enum Action
 	{
@@ -19,20 +16,20 @@ namespace vflibcs
 		#region Private Variables
 		Action _act;
 		int _iGraph;
-		int _inod;
+		int _nodeId;
 		Groups _grpRestore;
 		#endregion
 
 		#region Constructor
-		internal BacktrackAction(Action act, int iGraph, int inod, Groups grpRestore)
+		internal BacktrackAction(Action act, int iGraph, int nodeId, Groups grpRestore)
 		{
 			_act = act;
 			_iGraph = iGraph;
-			_inod = inod;
+			_nodeId = nodeId;
 			_grpRestore = grpRestore;
 		}
 
-		internal BacktrackAction(Action act, int iGraph, int inod) : this(act, iGraph, inod, (Groups)0) {}
+		internal BacktrackAction(Action act, int iGraph, int nodeId) : this(act, iGraph, nodeId, (Groups)0) {}
 
 		#endregion
 
@@ -42,11 +39,11 @@ namespace vflibcs
 			switch (_act)
 			{
 				case Action.deleteMatch:
-					vfs.RemoveFromMappingList(_iGraph, _inod);
+					vfs.RemoveFromMappingList(_iGraph, _nodeId);
 					break;
 
 				case Action.groupMove:
-					vfs.MakeMove(_iGraph, _inod, _grpRestore);
+					vfs.MakeMove(_iGraph, _nodeId, _grpRestore);
 					break;
 			}
 		}

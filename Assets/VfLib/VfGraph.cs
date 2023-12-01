@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 #if NUNIT
 using NUnit.Framework;
 #endif
 
-namespace vflibcs
+namespace VfLib
 {
 	class VfGraph
 	{
@@ -24,44 +23,44 @@ namespace vflibcs
 		#endregion
 
 		#region Accessors
-		internal int OutDegree(int inod)
+		internal int OutDegree(int nodeId)
 		{
-			return _arNodes[inod].OutDegree;
+			return _arNodes[nodeId].OutDegree;
 		}
 
-		internal int InDegree(int inod)
+		internal int InDegree(int nodeId)
 		{
-			return _arNodes[inod].InDegree;
+			return _arNodes[nodeId].InDegree;
 		}
 
-		internal int TotalDegree(int inod)
+		internal int TotalDegree(int nodeId)
 		{
-			return OutDegree(inod) + InDegree(inod);
+			return OutDegree(nodeId) + InDegree(nodeId);
 		}
 
-		internal List<int> OutNeighbors(int inod)
+		internal List<int> OutNeighbors(int nodeId)
 		{
-			return _arNodes[inod].OutNeighbors;
+			return _arNodes[nodeId].OutNeighbors;
 		}
 
-		internal List<int> InNeighbors(int inod)
+		internal List<int> InNeighbors(int nodeId)
 		{
-			return _arNodes[inod].InNeighbors;
+			return _arNodes[nodeId].InNeighbors;
 		}
 
-		internal Groups GetGroup(int inod)
+		internal Groups GetGroup(int nodeId)
 		{
-			return _arNodes[inod].Grps;
+			return _arNodes[nodeId].Grps;
 		}
 
-		internal void SetGroup(int inod, Groups grps)
+		internal void SetGroup(int nodeId, Groups grps)
 		{
-			_arNodes[inod].Grps = grps;
+			_arNodes[nodeId].Grps = grps;
 		}
 
-		internal object GetAttr(int inod)
+		internal object GetAttribute(int nodeId)
 		{
-			return _arNodes[inod].Attr;
+			return _arNodes[nodeId].Attribute;
 		}
 		#endregion
 
@@ -76,15 +75,15 @@ namespace vflibcs
 			return permOut;
 		}
 
-		internal VfGraph(IGraphLoader loader, int[] mpInodVfInodGraph)
+		internal VfGraph(IGraphLoader loader, int[] mpnodeIdVfnodeIdGraph)
 		{
 			_arNodes = new VfnNode[loader.NodeCount];
-			int[] mpInodGraphInodVf = ReversePermutation(mpInodVfInodGraph);
+			int[] mpnodeIdGraphnodeIdVf = ReversePermutation(mpnodeIdVfnodeIdGraph);
 			Dictionary<VfeNode, VfeNode> dctEdge = new Dictionary<VfeNode, VfeNode>();
 
-			for (int inodVf = 0; inodVf < loader.NodeCount; inodVf++)
+			for (int nodeIdVf = 0; nodeIdVf < loader.NodeCount; nodeIdVf++)
 			{
-				_arNodes[inodVf] = new VfnNode(loader, mpInodVfInodGraph[inodVf], dctEdge, mpInodGraphInodVf);
+				_arNodes[nodeIdVf] = new VfnNode(loader, mpnodeIdVfnodeIdGraph[nodeIdVf], dctEdge, mpnodeIdGraphnodeIdVf);
 			}
 		}
 		#endregion
@@ -131,9 +130,9 @@ namespace vflibcs
 				Assert.AreEqual(mpPermutation[1], 0);
 				int[] arOut = new int[vfg._arNodes[0].OutNeighbors.Count];
 				vfg._arNodes[0].OutNeighbors.CopyTo(arOut, 0);
-				int inodNeighbor1 = arOut[0];
-				int inodNeighbor2 = arOut[1];
-				Assert.IsTrue(inodNeighbor1 == 1 && inodNeighbor2 == 2 || inodNeighbor1 == 2 && inodNeighbor2 == 1);
+				int nodeIdNeighbor1 = arOut[0];
+				int nodeIdNeighbor2 = arOut[1];
+				Assert.IsTrue(nodeIdNeighbor1 == 1 && nodeIdNeighbor2 == 2 || nodeIdNeighbor1 == 2 && nodeIdNeighbor2 == 1);
 			}
 
 			[Test]

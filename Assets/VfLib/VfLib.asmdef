@@ -1,9 +1,7 @@
 {
-    "name": "CyclesGen",
+    "name": "VfLib",
     "rootNamespace": "",
-    "references": [
-        "GUID:d2b368f1cd9e87a439a570cc34c2866b"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

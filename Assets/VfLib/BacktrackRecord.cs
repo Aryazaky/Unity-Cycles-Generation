@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 #if NUNIT
 using NUnit.Framework;
 #endif
 
-namespace vflibcs
+namespace VfLib
 {
 	class BacktrackRecord
 	{
@@ -19,22 +17,22 @@ namespace vflibcs
 			_lstActions.Insert(0, act);
 		}
 
-		internal void SetMatch(int inod1, int inod2, VfState vfs)
+		internal void SetMatch(int nodeId1, int nodeId2, VfState vfs)
 		{
-			MoveToGroup(1, inod1, Groups.ContainedInMapping, vfs);
-			MoveToGroup(2, inod2, Groups.ContainedInMapping, vfs);
+			MoveToGroup(1, nodeId1, Groups.ContainedInMapping, vfs);
+			MoveToGroup(2, nodeId2, Groups.ContainedInMapping, vfs);
 
-			vfs.SetMapping(inod1, inod2);
+			vfs.SetMapping(nodeId1, nodeId2);
 
 			// Add actions to undo this act...
-			AddAction(new BacktrackAction(Action.deleteMatch, 1, inod1));
-			AddAction(new BacktrackAction(Action.deleteMatch, 2, inod2));
+			AddAction(new BacktrackAction(Action.deleteMatch, 1, nodeId1));
+			AddAction(new BacktrackAction(Action.deleteMatch, 2, nodeId2));
 		}
 
-		internal void MoveToGroup(int iGraph, int inod, Groups grpNew, VfState vfs)
+		internal void MoveToGroup(int iGraph, int nodeId, Groups grpNew, VfState vfs)
 		{
 			VfGraph vfg = iGraph == 1 ? vfs.Vfgr1 : vfs.Vfgr2;
-			Groups grpOld = vfg.GetGroup(inod);
+			Groups grpOld = vfg.GetGroup(nodeId);
 
 			if (grpOld == Groups.FromMapping && grpNew == Groups.ToMapping ||
 				grpOld == Groups.ToMapping && grpNew == Groups.FromMapping)
@@ -43,8 +41,8 @@ namespace vflibcs
 			}
 			if (grpOld != (grpOld | grpNew))
 			{
-				AddAction(new BacktrackAction(Action.groupMove, iGraph, inod, grpOld));
-				vfs.MakeMove(iGraph, inod, grpNew);
+				AddAction(new BacktrackAction(Action.groupMove, iGraph, nodeId, grpOld));
+				vfs.MakeMove(iGraph, nodeId, grpNew);
 			}
 		}
 		#endregion

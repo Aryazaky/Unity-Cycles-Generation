@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 #if NUNIT
 using NUnit.Framework;
 #endif
 
-namespace vflibcs
+namespace VfLib
 {
 #if NUNIT
 	class RandomGraph

@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace vflibcs
+namespace VfLib
 {
 	class CmpNodeDegrees : IComparer<int>
 	{
@@ -22,16 +21,16 @@ namespace vflibcs
 		{
 			get
 			{
-				int[] mpInodInodPermuted = new int[_loader.NodeCount];
+				int[] mpnodeIdnodeIdPermuted = new int[_loader.NodeCount];
 				IComparer<int> icmpDegree = new CmpNodeDegrees(_loader);
 
 				for (int i = 0; i < _loader.NodeCount; i++)
 				{
-					mpInodInodPermuted[i] = i;
+					mpnodeIdnodeIdPermuted[i] = i;
 				}
 
-				Array.Sort(mpInodInodPermuted, icmpDegree);
-				return mpInodInodPermuted;
+				Array.Sort(mpnodeIdnodeIdPermuted, icmpDegree);
+				return mpnodeIdnodeIdPermuted;
 			}
 		}
 		#endregion

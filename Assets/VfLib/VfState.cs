@@ -1,34 +1,34 @@
 //#define GATHERSTATS
 //#define BIGSLOWTEST
 //#define PERFORMANCETEST
+
 using System;
 using System.Collections.Generic;
-using System.Text;
 #if NUNIT
 using NUnit.Framework;
 #endif
 
-namespace vflibcs
+namespace VfLib
 {
 	// Struct representing a full isomorphism mapping
 	public struct FullMapping
 	{
 		public FullMapping(int count1, int count2)
 		{
-			arinodMap1To2 = new int[count1];
-			arinodMap2To1 = new int[count2];
+			arnodeIdMap1To2 = new int[count1];
+			arnodeIdMap2To1 = new int[count2];
 		}
 
-		public FullMapping(int[] arinodMap1To2Prm, int[] arinodMap2To1Prm)
+		public FullMapping(int[] arrayNodeIdMap1To2Prm, int[] arnodeIdMap2To1Prm)
 		{
-			int cElements = arinodMap1To2Prm.Length;
-			arinodMap1To2 = new int[cElements];
-			arinodMap2To1 = new int[cElements];
-			Array.Copy(arinodMap1To2Prm, arinodMap1To2, cElements);
-			Array.Copy(arinodMap2To1Prm, arinodMap2To1, cElements);
+			int cElements = arrayNodeIdMap1To2Prm.Length;
+			arnodeIdMap1To2 = new int[cElements];
+			arnodeIdMap2To1 = new int[cElements];
+			Array.Copy(arrayNodeIdMap1To2Prm, arnodeIdMap1To2, cElements);
+			Array.Copy(arnodeIdMap2To1Prm, arnodeIdMap2To1, cElements);
 		}
-		public int[] arinodMap1To2;
-		public int[] arinodMap2To1;
+		public int[] arnodeIdMap1To2;
+		public int[] arnodeIdMap2To1;
 	}
 
 	class VfState
@@ -39,8 +39,8 @@ namespace vflibcs
 
 		// Mapping between node positions in VfGraph and the original Graph.
 		// This is just the permutation to sort the original graph nodes by degrees.
-		int[] _armpInodVfInodGraph1;
-		int[] _armpInodVfInodGraph2;
+		int[] _armpnodeIdVfnodeIdGraph1;
+		int[] _armpnodeIdVfnodeIdGraph2;
 
 		// Above mappings but indexed from/to node id's from the original maps.
 		int[] _armpNid1Nid2 = null;
@@ -54,8 +54,8 @@ namespace vflibcs
 		IGraphLoader _ldr1, _ldr2;
 
 		// The actual mappings we're building up
-		int[] _arinodMap1To2;
-		int[] _arinodMap2To1;
+		int[] _arnodeIdMap1To2;
+		int[] _arnodeIdMap2To1;
 
 		// All the mappings we've located thus far...
 		List<FullMapping> _lstMappings = new List<FullMapping>();
@@ -75,7 +75,7 @@ namespace vflibcs
 		bool _fIsomorphism = false;			// Subgraph Isomorphism or straight isomorphism?
 		bool _fSuccessfulMatch = false;		// Have we made a successful match?
 		bool _fMatched = false;				// Have we attempted a match?
-		bool _fContextCheck = false;		// Do we context check using the attributes?
+		bool _fContextCheck = false;		// Do we context check using the attributeibutes?
 		bool _fFindAll = false;				// Find all subgraphs or just the first?
 		#endregion
 
@@ -146,63 +146,63 @@ namespace vflibcs
 
 		private void MassagePermutation()
 		{
-			// Permutations to move from VfGraph inods to Graph inods
-			int[] armpInodGraphInodVf1 = VfGraph.ReversePermutation(_armpInodVfInodGraph1);
-			int[] armpInodGraphInodVf2 = VfGraph.ReversePermutation(_armpInodVfInodGraph2);
+			// Permutations to move from VfGraph nodeIds to Graph nodeIds
+			int[] armpnodeIdGraphnodeIdVf1 = VfGraph.ReversePermutation(_armpnodeIdVfnodeIdGraph1);
+			int[] armpnodeIdGraphnodeIdVf2 = VfGraph.ReversePermutation(_armpnodeIdVfnodeIdGraph2);
 
 			// Holding areas for new permutations
-			_armpNid1Nid2 = new int[_arinodMap1To2.Length];
-			_armpNid2Nid1 = new int[_arinodMap2To1.Length];
+			_armpNid1Nid2 = new int[_arnodeIdMap1To2.Length];
+			_armpNid2Nid1 = new int[_arnodeIdMap2To1.Length];
 
-			for (int i = 0; i < _arinodMap1To2.Length; i++)
+			for (int i = 0; i < _arnodeIdMap1To2.Length; i++)
 			{
-				int inodMap = _arinodMap1To2[armpInodGraphInodVf1[i]];
-				_armpNid1Nid2[i] = (inodMap == map_Illegal ? map_Illegal : (int)_ldr2.IdFromPos(_armpInodVfInodGraph2[inodMap]));
+				int nodeIdMap = _arnodeIdMap1To2[armpnodeIdGraphnodeIdVf1[i]];
+				_armpNid1Nid2[i] = (nodeIdMap == map_Illegal ? map_Illegal : (int)_ldr2.IdFromPos(_armpnodeIdVfnodeIdGraph2[nodeIdMap]));
 			}
 
-			for (int i = 0; i < _arinodMap2To1.Length; i++)
+			for (int i = 0; i < _arnodeIdMap2To1.Length; i++)
 			{
 				// Shouldn't be any map_illegal values in the second graph's array
-				_armpNid2Nid1[i] = _ldr1.IdFromPos(_armpInodVfInodGraph1[_arinodMap2To1[armpInodGraphInodVf2[i]]]);
+				_armpNid2Nid1[i] = _ldr1.IdFromPos(_armpnodeIdVfnodeIdGraph1[_arnodeIdMap2To1[armpnodeIdGraphnodeIdVf2[i]]]);
 			}
 		}
 
 		private void MassagePermutations(
-			int[] arinodMap1To2, int[] arinodMap2To1,
-			int[] armpInodGraphInodVf1, int[] armpInodGraphInodVf2,
+			int[] arnodeIdMap1To2, int[] arnodeIdMap2To1,
+			int[] armpnodeIdGraphnodeIdVf1, int[] armpnodeIdGraphnodeIdVf2,
 			ref int[] armpNid1Nid2, ref int[] armpNid2Nid1)
 		{
 			// Holding areas for new permutations
-			armpNid1Nid2 = new int[arinodMap1To2.Length];
-			armpNid2Nid1 = new int[arinodMap2To1.Length];
+			armpNid1Nid2 = new int[arnodeIdMap1To2.Length];
+			armpNid2Nid1 = new int[arnodeIdMap2To1.Length];
 
-			for (int i = 0; i < arinodMap1To2.Length; i++)
+			for (int i = 0; i < arnodeIdMap1To2.Length; i++)
 			{
-				int inodMap = arinodMap1To2[armpInodGraphInodVf1[i]];
-				armpNid1Nid2[i] = (inodMap == map_Illegal ? map_Illegal : (int)_ldr2.IdFromPos(_armpInodVfInodGraph2[inodMap]));
+				int nodeIdMap = arnodeIdMap1To2[armpnodeIdGraphnodeIdVf1[i]];
+				armpNid1Nid2[i] = (nodeIdMap == map_Illegal ? map_Illegal : (int)_ldr2.IdFromPos(_armpnodeIdVfnodeIdGraph2[nodeIdMap]));
 			}
 
-			for (int i = 0; i < arinodMap2To1.Length; i++)
+			for (int i = 0; i < arnodeIdMap2To1.Length; i++)
 			{
 				// Shouldn't be any map_illegal values in the second graph's array
-				armpNid2Nid1[i] = _ldr1.IdFromPos(_armpInodVfInodGraph1[arinodMap2To1[armpInodGraphInodVf2[i]]]);
+				armpNid2Nid1[i] = _ldr1.IdFromPos(_armpnodeIdVfnodeIdGraph1[arnodeIdMap2To1[armpnodeIdGraphnodeIdVf2[i]]]);
 			}
 		}
 
 		void MassagePermutationList()
 		{
-			int count1 = _arinodMap1To2.Length;
-			int count2 = _arinodMap2To1.Length;
+			int count1 = _arnodeIdMap1To2.Length;
+			int count2 = _arnodeIdMap2To1.Length;
 
-			// Permutations to move from VfGraph inods to Graph inods
-			int[] armpInodGraphInodVf1 = VfGraph.ReversePermutation(_armpInodVfInodGraph1);
-			int[] armpInodGraphInodVf2 = VfGraph.ReversePermutation(_armpInodVfInodGraph2);
+			// Permutations to move from VfGraph nodeIds to Graph nodeIds
+			int[] armpnodeIdGraphnodeIdVf1 = VfGraph.ReversePermutation(_armpnodeIdVfnodeIdGraph1);
+			int[] armpnodeIdGraphnodeIdVf2 = VfGraph.ReversePermutation(_armpnodeIdVfnodeIdGraph2);
 			_lstfm = new List<FullMapping>(_lstMappings.Count);
 
 			foreach (FullMapping fm in _lstMappings)
 			{
 				FullMapping fmTmp = new FullMapping(count1, count2);
-				MassagePermutations(fm.arinodMap1To2, fm.arinodMap2To1, armpInodGraphInodVf1, armpInodGraphInodVf2, ref fmTmp.arinodMap1To2, ref fmTmp.arinodMap2To1);
+				MassagePermutations(fm.arnodeIdMap1To2, fm.arnodeIdMap2To1, armpnodeIdGraphnodeIdVf1, armpnodeIdGraphnodeIdVf2, ref fmTmp.arnodeIdMap1To2, ref fmTmp.arnodeIdMap2To1);
 				_lstfm.Add(fmTmp);
 			}
 		}
@@ -291,20 +291,20 @@ namespace vflibcs
 
 			_fIsomorphism = fIsomorphism;
 
-			_armpInodVfInodGraph1 = new CmpNodeDegrees(loader1).Permutation;
-			_armpInodVfInodGraph2 = new CmpNodeDegrees(loader2).Permutation;
-			_vfgr1 = new VfGraph(loader1, _armpInodVfInodGraph1);
-			_vfgr2 = new VfGraph(loader2, _armpInodVfInodGraph2);
-			_arinodMap1To2 = new int[loader1.NodeCount];
-			_arinodMap2To1 = new int[loader2.NodeCount];
+			_armpnodeIdVfnodeIdGraph1 = new CmpNodeDegrees(loader1).Permutation;
+			_armpnodeIdVfnodeIdGraph2 = new CmpNodeDegrees(loader2).Permutation;
+			_vfgr1 = new VfGraph(loader1, _armpnodeIdVfnodeIdGraph1);
+			_vfgr2 = new VfGraph(loader2, _armpnodeIdVfnodeIdGraph2);
+			_arnodeIdMap1To2 = new int[loader1.NodeCount];
+			_arnodeIdMap2To1 = new int[loader2.NodeCount];
 			for (int i = 0; i < loader1.NodeCount; i++)
 			{
-				_arinodMap1To2[i] = map_Illegal;
+				_arnodeIdMap1To2[i] = map_Illegal;
 				_lstDisconnected1.Add(i);
 			}
 			for (int i = 0; i < loader2.NodeCount; i++)
 			{
-				_arinodMap2To1[i] = map_Illegal;
+				_arnodeIdMap2To1[i] = map_Illegal;
 				_lstDisconnected2.Add(i);
 			}
 		}
@@ -375,9 +375,9 @@ namespace vflibcs
 				return false;
 			}
 
-			for (int iNode = 0; iNode < _vfgr2.NodeCount; iNode++)
+			for (int nodeIde = 0; nodeIde < _vfgr2.NodeCount; nodeIde++)
 			{
-				if (!fnCmp(_vfgr1.TotalDegree(iNode), _vfgr2.TotalDegree(iNode)))
+				if (!fnCmp(_vfgr1.TotalDegree(nodeIde), _vfgr2.TotalDegree(nodeIde)))
 				{
 					return false;
 				}
@@ -387,7 +387,7 @@ namespace vflibcs
 
 		void RecordCurrentMatch()
 		{
-			_lstMappings.Add(new FullMapping(_arinodMap1To2, _arinodMap2To1));
+			_lstMappings.Add(new FullMapping(_arnodeIdMap1To2, _arnodeIdMap2To1));
 		}
 
 		// Find an isomorphism between a subgraph of _vfgr1 and the entirity of _vfgr2...
@@ -505,16 +505,16 @@ namespace vflibcs
 		#endregion
 
 		#region Mapping
-		internal void SetMapping(int inod1, int inod2)
+		internal void SetMapping(int nodeId1, int nodeId2)
 		{
-			_arinodMap1To2[inod1] = inod2;
-			_arinodMap2To1[inod2] = inod1;
+			_arnodeIdMap1To2[nodeId1] = nodeId2;
+			_arnodeIdMap2To1[nodeId2] = nodeId1;
 		}
 
-		internal void RemoveFromMappingList(int iGraph, int inod)
+		internal void RemoveFromMappingList(int iGraph, int nodeId)
 		{
-			int[] mp = iGraph == 1 ? _arinodMap1To2 : _arinodMap2To1;
-			mp[inod] = map_Illegal;
+			int[] mp = iGraph == 1 ? _arnodeIdMap1To2 : _arnodeIdMap2To1;
+			mp[nodeId] = map_Illegal;
 		}
 		#endregion
 
@@ -523,9 +523,9 @@ namespace vflibcs
 		{
 			int cnod = 0;
 
-			foreach (int inod in lstOfNodes)
+			foreach (int nodeId in lstOfNodes)
 			{
-				if (((int)vfgr.GetGroup(inod) & (int)grp) != 0)
+				if (((int)vfgr.GetGroup(nodeId) & (int)grp) != 0)
 				{
 					cnod++;
 				}
@@ -538,13 +538,13 @@ namespace vflibcs
 		{
 			int cnodInMapping1 = 0;
 
-			foreach (int inod in lstConnected1)
+			foreach (int nodeId in lstConnected1)
 			{
-				int inodMap = _arinodMap1To2[inod];
-				if (inodMap != map_Illegal)
+				int nodeIdMap = _arnodeIdMap1To2[nodeId];
+				if (nodeIdMap != map_Illegal)
 				{
 					cnodInMapping1++;
-					if (!lstConnected2.Contains(inodMap))
+					if (!lstConnected2.Contains(nodeIdMap))
 					{
 						return false;
 					}
@@ -612,13 +612,13 @@ namespace vflibcs
 
 		private bool FFeasible(Match mtc)
 		{
-			int inod1 = mtc.Inod1;
-			int inod2 = mtc.Inod2;
+			int nodeId1 = mtc.nodeId1;
+			int nodeId2 = mtc.nodeId2;
 
 			if (_fContextCheck)
 			{
-				IContextCheck icc1 = _vfgr1.GetAttr(inod1) as IContextCheck;
-				IContextCheck icc2 = _vfgr2.GetAttr(inod2) as IContextCheck;
+				IContextCheck icc1 = _vfgr1.GetAttribute(nodeId1) as IContextCheck;
+				IContextCheck icc2 = _vfgr2.GetAttribute(nodeId2) as IContextCheck;
 
 				if (icc1 != null && icc2 != null)
                 {
@@ -629,10 +629,10 @@ namespace vflibcs
                 }
 			}
 
-			List<int> lstIn1 = _vfgr1.InNeighbors(inod1);
-			List<int> lstIn2 = _vfgr2.InNeighbors(inod2);
-			List<int> lstOut1 = _vfgr1.OutNeighbors(inod1);
-			List<int> lstOut2 = _vfgr2.OutNeighbors(inod2);
+			List<int> lstIn1 = _vfgr1.InNeighbors(nodeId1);
+			List<int> lstIn2 = _vfgr2.InNeighbors(nodeId2);
+			List<int> lstOut1 = _vfgr1.OutNeighbors(nodeId1);
+			List<int> lstOut2 = _vfgr2.OutNeighbors(nodeId2);
 
 			// In Neighbors in mapping must map to In Neighbors...
 
@@ -665,11 +665,11 @@ namespace vflibcs
 		{
 			List<int> lstRet = new List<int>();
 
-			foreach (int inod in lstOfNodes)
+			foreach (int nodeId in lstOfNodes)
 			{
-				if (((int)vfgr.GetGroup(inod) & (int)grp) != 0)
+				if (((int)vfgr.GetGroup(nodeId) & (int)grp) != 0)
 				{
-					lstRet.Add(inod);
+					lstRet.Add(nodeId);
 				}
 			}
 
@@ -678,42 +678,42 @@ namespace vflibcs
 
 		private bool FAddMatchToSolution(Match mtc, BacktrackRecord btr)
 		{
-			int inod1 = mtc.Inod1;
-			int inod2 = mtc.Inod2;
+			int nodeId1 = mtc.nodeId1;
+			int nodeId2 = mtc.nodeId2;
 
-			btr.SetMatch(mtc.Inod1, mtc.Inod2, this);
+			btr.SetMatch(mtc.nodeId1, mtc.nodeId2, this);
 
-			List<int> lstIn1 = _vfgr1.InNeighbors(inod1);
-			List<int> lstIn2 = _vfgr2.InNeighbors(inod2);
-			List<int> lstOut1 = _vfgr1.OutNeighbors(inod1);
-			List<int> lstOut2 = _vfgr2.OutNeighbors(inod2);
+			List<int> lstIn1 = _vfgr1.InNeighbors(nodeId1);
+			List<int> lstIn2 = _vfgr2.InNeighbors(nodeId2);
+			List<int> lstOut1 = _vfgr1.OutNeighbors(nodeId1);
+			List<int> lstOut2 = _vfgr2.OutNeighbors(nodeId2);
 
-			foreach (int inod in lstOut1)
+			foreach (int nodeId in lstOut1)
 			{
-				if (((int)_vfgr1.GetGroup(inod) & (int)(Groups.Disconnected | Groups.ToMapping)) != 0)
+				if (((int)_vfgr1.GetGroup(nodeId) & (int)(Groups.Disconnected | Groups.ToMapping)) != 0)
 				{
-					btr.MoveToGroup(1, inod, Groups.FromMapping, this);
+					btr.MoveToGroup(1, nodeId, Groups.FromMapping, this);
 				}
 			}
-			foreach (int inod in lstIn1)
+			foreach (int nodeId in lstIn1)
 			{
-				if (((int)_vfgr1.GetGroup(inod) & (int)(Groups.Disconnected | Groups.FromMapping)) != 0)
+				if (((int)_vfgr1.GetGroup(nodeId) & (int)(Groups.Disconnected | Groups.FromMapping)) != 0)
 				{
-					btr.MoveToGroup(1, inod, Groups.ToMapping, this);
+					btr.MoveToGroup(1, nodeId, Groups.ToMapping, this);
 				}
 			}
-			foreach (int inod in lstOut2)
+			foreach (int nodeId in lstOut2)
 			{
-				if (((int)_vfgr2.GetGroup(inod) & (int)(Groups.Disconnected | Groups.ToMapping)) != 0)
+				if (((int)_vfgr2.GetGroup(nodeId) & (int)(Groups.Disconnected | Groups.ToMapping)) != 0)
 				{
-					btr.MoveToGroup(2, inod, Groups.FromMapping, this);
+					btr.MoveToGroup(2, nodeId, Groups.FromMapping, this);
 				}
 			}
-			foreach (int inod in lstIn2)
+			foreach (int nodeId in lstIn2)
 			{
-				if (((int)_vfgr2.GetGroup(inod) & (int)(Groups.Disconnected | Groups.FromMapping)) != 0)
+				if (((int)_vfgr2.GetGroup(nodeId) & (int)(Groups.Disconnected | Groups.FromMapping)) != 0)
 				{
-					btr.MoveToGroup(2, inod, Groups.ToMapping, this);
+					btr.MoveToGroup(2, nodeId, Groups.ToMapping, this);
 				}
 			}
 
@@ -725,7 +725,7 @@ namespace vflibcs
 			return fnCmp(lstOut1.Count, lstOut2.Count) && fnCmp(lstIn1.Count, lstIn2.Count);
 		}
 
-		internal void MakeMove(int iGraph, int inod, Groups grpNew)
+		internal void MakeMove(int iGraph, int nodeId, Groups grpNew)
 		{
 			// Moves to the mapping are handled by the mapping arrays and aren't handled here.
 
@@ -743,7 +743,7 @@ namespace vflibcs
 				lstDisconnected = LstDisconnected2;
 			}
 
-			int igrpCur = (int)vfg.GetGroup(inod);
+			int igrpCur = (int)vfg.GetGroup(nodeId);
 			int igrpNew = (int)grpNew;
 
 			int igrpRemove = igrpCur & ~igrpNew;
@@ -753,18 +753,18 @@ namespace vflibcs
 			{
 				if ((igrpRemove & (int)Groups.Disconnected) != 0)
 				{
-					lstDisconnected.Delete(inod);
+					lstDisconnected.Delete(nodeId);
 				}
 				if ((igrpRemove & (int)Groups.FromMapping) != 0)
 				{
 					if (iGraph == 1)
 					{
-						_lstOut1.Delete(inod);
+						_lstOut1.Delete(nodeId);
 						_outDegreeTotal1--;
 					}
 					else
 					{
-						_lstOut2.Delete(inod);
+						_lstOut2.Delete(nodeId);
 						_outDegreeTotal2--;
 					}
 				}
@@ -772,12 +772,12 @@ namespace vflibcs
 				{
 					if (iGraph == 1)
 					{
-						_lstIn1.Delete(inod);
+						_lstIn1.Delete(nodeId);
 						_inDegreeTotal1--;
 					}
 					else
 					{
-						_lstIn2.Delete(inod);
+						_lstIn2.Delete(nodeId);
 						_inDegreeTotal2--;
 					}
 				}
@@ -786,18 +786,18 @@ namespace vflibcs
 			{
 				if ((igrpAdd & (int)Groups.Disconnected) != 0)
 				{
-					lstDisconnected.Add(inod);
+					lstDisconnected.Add(nodeId);
 				}
 				if ((igrpAdd & (int)Groups.FromMapping) != 0)
 				{
 					if (iGraph == 1)
 					{
-						_lstOut1.Add(inod);
+						_lstOut1.Add(nodeId);
 						_outDegreeTotal1++;
 					}
 					else
 					{
-						_lstOut2.Add(inod);
+						_lstOut2.Add(nodeId);
 						_outDegreeTotal2++;
 					}
 				}
@@ -805,17 +805,17 @@ namespace vflibcs
 				{
 					if (iGraph == 1)
 					{
-						_lstIn1.Add(inod);
+						_lstIn1.Add(nodeId);
 						_inDegreeTotal1++;
 					}
 					else
 					{
-						_lstIn2.Add(inod);
+						_lstIn2.Add(nodeId);
 						_inDegreeTotal2++;
 					}
 				}
 			}
-			vfg.SetGroup(inod, grpNew);
+			vfg.SetGroup(nodeId, grpNew);
 		}
 
 		
@@ -940,8 +940,8 @@ namespace vflibcs
 			{
 				VfState vfs = VfsTest();
 				vfs.SetMapping(0, 1);
-				Assert.AreEqual(1, vfs._arinodMap1To2[0]);
-				Assert.AreEqual(0, vfs._arinodMap2To1[1]);
+				Assert.AreEqual(1, vfs._arnodeIdMap1To2[0]);
+				Assert.AreEqual(0, vfs._arnodeIdMap2To1[1]);
 			}
 
 			[Test]
@@ -1092,14 +1092,14 @@ namespace vflibcs
 				{
 					for (int iCol = 0; iCol < cCols - 1; iCol++)
 					{
-						int iNode = iCol * cRows + iRow;
-						int iNodeToCol = iNode + 1;
-						int iNodeToRow = iNode + cRows;
+						int nodeIde = iCol * cRows + iRow;
+						int nodeIdeToCol = nodeIde + 1;
+						int nodeIdeToRow = nodeIde + cRows;
 
-						graph1.InsertEdge(iNode, iNodeToCol);
-						graph1.InsertEdge(iNode, iNodeToRow);
-						graph1.InsertEdge(iNodeToCol, iNode);
-						graph1.InsertEdge(iNodeToRow, iNode);
+						graph1.InsertEdge(nodeIde, nodeIdeToCol);
+						graph1.InsertEdge(nodeIde, nodeIdeToRow);
+						graph1.InsertEdge(nodeIdeToCol, nodeIde);
+						graph1.InsertEdge(nodeIdeToRow, nodeIde);
 					}
 				}
 				Graph graph2 = graph1.IsomorphicShuffling(new Random(102));

@@ -1,33 +1,30 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 #if NUNIT
 using NUnit.Framework;
 #endif
 
-namespace vflibcs
+namespace VfLib
 {
 	class CandidateFinder
 	{
 		#region Private variables
 		VfState _vfs;
-		int[] _arinodGraph1;
-		int _iinod = 0;
+		int[] _arnodeIdGraph1;
+		int _inodeId = 0;
 		Match _mch;
 		int _totalDegree2;
 		bool _fFailImmediately = false;
 		#endregion
 
 		#region Constructor
-		void SetInitialMatch(int inod1, int inod2)
+		void SetInitialMatch(int nodeId1, int nodeId2)
 		{
-			_totalDegree2 = _vfs.Vfgr2.InDegree(inod2) + _vfs.Vfgr2.OutDegree(inod2);
+			_totalDegree2 = _vfs.Vfgr2.InDegree(nodeId2) + _vfs.Vfgr2.OutDegree(nodeId2);
 
-			if (!FValidDegrees(inod1, inod2))
+			if (!FValidDegrees(nodeId1, nodeId2))
 			{
 				_fFailImmediately = true;
 			}
-			_mch = new Match(inod1, inod2);
+			_mch = new Match(nodeId1, nodeId2);
 		}
 
 		internal CandidateFinder(VfState vfs)
@@ -44,33 +41,33 @@ namespace vflibcs
 			}
 			if (vfs.LstOut2.Count > 0 && vfs.LstOut1.Count > 0)
 			{
-				_arinodGraph1 = new int[vfs.LstOut1.Count];
-				vfs.LstOut1.CopyTo(_arinodGraph1);
+				_arnodeIdGraph1 = new int[vfs.LstOut1.Count];
+				vfs.LstOut1.CopyTo(_arnodeIdGraph1);
 				SetInitialMatch(vfs.LstOut1[0], vfs.LstOut2[0]);
 			}
 			else if (vfs.LstIn2.Count > 0 && vfs.LstIn1.Count > 0)
 			{
-				_arinodGraph1 = new int[vfs.LstIn1.Count];
-				vfs.LstIn1.CopyTo(_arinodGraph1);
+				_arnodeIdGraph1 = new int[vfs.LstIn1.Count];
+				vfs.LstIn1.CopyTo(_arnodeIdGraph1);
 				SetInitialMatch(vfs.LstIn1[0], vfs.LstIn2[0]);
 			}
 			else if (vfs.LstDisconnected1.Count >= 0)
 			{
-				_arinodGraph1 = new int[vfs.LstDisconnected1.Count];
-				vfs.LstDisconnected1.CopyTo(_arinodGraph1);
+				_arnodeIdGraph1 = new int[vfs.LstDisconnected1.Count];
+				vfs.LstDisconnected1.CopyTo(_arnodeIdGraph1);
 				SetInitialMatch(vfs.LstDisconnected1[0], vfs.LstDisconnected2[0]);
 			}
 		}
 		#endregion
 
 		#region State
-		bool FValidDegrees(int inod1, int inod2)
+		bool FValidDegrees(int nodeId1, int nodeId2)
 		{
 			// We must always have the degrees in graph1 at least as large as those in graph2.  Also,
 			// since we order the nodes by total degree size, when we fail this condition, we know that
 			// there are no further nodes in graph1 which will match the current graph2 node so we can
 			// abandon the search.
-			return _vfs.fnCmp(_vfs.Vfgr1.InDegree(inod1) + _vfs.Vfgr1.OutDegree(inod1), _totalDegree2);
+			return _vfs.fnCmp(_vfs.Vfgr1.InDegree(nodeId1) + _vfs.Vfgr1.OutDegree(nodeId1), _totalDegree2);
 		}
 
 		internal Match NextCandidateMatch()
@@ -80,10 +77,10 @@ namespace vflibcs
 				return null;
 			}
 
-			if (_iinod < _arinodGraph1.Length)
+			if (_inodeId < _arnodeIdGraph1.Length)
 			{
-				_mch.Inod1 = _arinodGraph1[_iinod++];
-				if (!FValidDegrees(_mch.Inod1, _mch.Inod2))
+				_mch.nodeId1 = _arnodeIdGraph1[_inodeId++];
+				if (!FValidDegrees(_mch.nodeId1, _mch.nodeId2))
 				{
 					return null;
 				}
@@ -139,11 +136,11 @@ namespace vflibcs
 				VfState vfs = VfsTest();
 				CandidateFinder cf = new CandidateFinder(vfs);
 				Match mch = cf.NextCandidateMatch();
-				Assert.AreEqual(0, mch.Inod1);
-				Assert.AreEqual(0, mch.Inod2);
+				Assert.AreEqual(0, mch.nodeId1);
+				Assert.AreEqual(0, mch.nodeId2);
 				mch = cf.NextCandidateMatch();
-				Assert.AreEqual(1, mch.Inod1);
-				Assert.AreEqual(0, mch.Inod2);
+				Assert.AreEqual(1, mch.nodeId1);
+				Assert.AreEqual(0, mch.nodeId2);
 			}
 		}
 #endif

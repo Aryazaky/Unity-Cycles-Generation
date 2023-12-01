@@ -1,34 +1,30 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace vflibcs
+namespace VfLib
 {
 	class Match
 	{
 		#region Private Variables
-		int _inod1;
-		int _inod2;
+		int _nodeId1;
+		int _nodeId2;
 		#endregion
 
 		#region Properties
-		internal int Inod1
+		internal int nodeId1
 		{
-			get { return _inod1; }
-			set { _inod1 = value; }
+			get { return _nodeId1; }
+			set { _nodeId1 = value; }
 		}
 
-		internal int Inod2
+		internal int nodeId2
 		{
-			get { return _inod2; }
+			get { return _nodeId2; }
 		}
 		#endregion
 
 		#region Constructor
-		public Match(int inod1, int inod2)
+		public Match(int nodeId1, int nodeId2)
 		{
-			_inod1 = inod1;
-			_inod2 = inod2;
+			_nodeId1 = nodeId1;
+			_nodeId2 = nodeId2;
 		}
 		#endregion
 	}
