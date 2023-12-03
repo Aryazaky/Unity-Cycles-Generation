@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace Core
 {
-    public class Graph : IEnumerable<INode>
+    public class Graph<T> : IEnumerable<T> where T : INode
     {
-        private readonly IEnumerable<INode> nodes;
+        private readonly IEnumerable<T> nodes;
 
-        public Graph(IEnumerable<INode> nodes)
+        public Graph(IEnumerable<T> nodes)
         {
             var nodeList = nodes.ToList();
             if (GraphUtils.AreAllNodesConnected(nodeList))
@@ -19,7 +19,7 @@ namespace Core
             else throw new Exception("There is a lone island unconnected");
         }
 
-        public bool IsVertexInducedSubgraphOf(Graph other)
+        public bool IsVertexInducedSubgraphOf(Graph<T> other)
         {
             // Check if all nodes from this graph are present in the other graph
             if (nodes.All(node => other.nodes.Contains(node)))
@@ -49,7 +49,7 @@ namespace Core
             return false;
         }
 
-        public IEnumerator<INode> GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
             return nodes.GetEnumerator();
         }
@@ -63,7 +63,7 @@ namespace Core
     
     public static class GraphUtils
     {
-        public static bool AreAllNodesConnected(List<INode> nodes)
+        public static bool AreAllNodesConnected<T>(List<T> nodes) where T : INode
         {
             if (!nodes.Any())
             {
@@ -71,7 +71,7 @@ namespace Core
                 return false;
             }
             // Create a set to keep track of visited nodes
-            var visitedNodes = new HashSet<INode>();
+            var visitedNodes = new HashSet<T>();
 
             // Start DepthFirstSearch from the first node in the list
             DepthFirstSearch(nodes[0], visitedNodes);
@@ -80,7 +80,7 @@ namespace Core
             return visitedNodes.Count == nodes.Count;
         }
 
-        private static void DepthFirstSearch(INode node, ISet<INode> visitedNodes)
+        private static void DepthFirstSearch<T>(T node, ISet<T> visitedNodes) where T : INode
         {
             // Mark the current node as visited
             visitedNodes.Add(node);
@@ -88,10 +88,12 @@ namespace Core
             // Visit adjacent nodes
             foreach (var edge in node.Edges)
             {
-                var adjacentNode = edge.GetOtherNode(node);
-                if (!visitedNodes.Contains(adjacentNode))
+                INode adjacentNode = edge.GetOtherNode(node);
+
+                // Check if adjacentNode is of type T before casting
+                if (adjacentNode is T adjacentNodeAsT && !visitedNodes.Contains(adjacentNodeAsT))
                 {
-                    DepthFirstSearch(adjacentNode, visitedNodes);
+                    DepthFirstSearch(adjacentNodeAsT, visitedNodes);
                 }
             }
         }

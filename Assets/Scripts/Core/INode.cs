@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Core
 {
@@ -7,9 +8,9 @@ namespace Core
         IEnumerable<INodeEdge> Edges { get; }
     }
     
-    public interface INodeTag<T>
+    public interface INodeTag<T> where T : IComparable<T>
     {
         IEnumerable<T> Tags { get; }
-        bool CompareTag(T tag);
+        bool ContainsTag(T tag);
     }
 }

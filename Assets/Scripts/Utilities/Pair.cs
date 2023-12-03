@@ -59,6 +59,22 @@ namespace Utilities
     {
         private readonly HashSet<Pair<T>> pairs = new HashSet<Pair<T>>();
 
+        public PairSet(params Pair<T>[] items)
+        {
+            foreach (var pair in items)
+            {
+                Add(pair);
+            }
+        }
+
+        public PairSet(IEnumerable<Pair<T>> items)
+        {
+            foreach (var pair in items)
+            {
+                Add(pair);
+            }
+        }
+
         /// <summary>
         /// Adds a unique pair to the PairSet, ensuring that no items in the pair already exist in other pairs.
         /// </summary>
@@ -78,6 +94,11 @@ namespace Utilities
             pairs.Add(pair);
             return true;
         }
+
+        /// <summary>
+        /// Adds a unique pair to the PairSet, ensuring that no items in the pair already exist in other pairs.
+        /// </summary>
+        public bool Add(T itemA, T itemB) => Add(new Pair<T>(itemA, itemB));
 
         /// <summary>
         /// Gets the other item in the pair based on the specified item.

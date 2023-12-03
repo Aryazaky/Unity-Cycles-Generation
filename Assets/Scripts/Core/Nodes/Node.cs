@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Core.Nodes
 {
-    public class Node<T> : INode, INodeTag<T>
+    public class Node<T> : INode, INodeTag<T> where T : IComparable<T>
     {
         private readonly List<INodeEdge> edges = new();
 
@@ -21,7 +22,7 @@ namespace Core.Nodes
 
         public IEnumerable<T> Tags { get; }
         
-        public bool CompareTag(T tag)
+        public bool ContainsTag(T tag)
         {
             return Tags.Contains(tag);
         }
