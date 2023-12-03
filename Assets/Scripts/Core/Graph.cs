@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Core
 {
-    public class Graph
+    public class Graph : IEnumerable<INode>
     {
         private readonly IEnumerable<INode> nodes;
 
@@ -46,6 +47,16 @@ namespace Core
 
             // Not all nodes are present in the other graph
             return false;
+        }
+
+        public IEnumerator<INode> GetEnumerator()
+        {
+            return nodes.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 

@@ -15,20 +15,20 @@ namespace VfLib
 	{
 		public FullMapping(int count1, int count2)
 		{
-			arnodeIdMap1To2 = new int[count1];
-			arnodeIdMap2To1 = new int[count2];
+			arrayNodeIdMap1To2 = new int[count1];
+			arrayNodeIdMap2To1 = new int[count2];
 		}
 
-		public FullMapping(int[] arrayNodeIdMap1To2Prm, int[] arnodeIdMap2To1Prm)
+		public FullMapping(int[] arrayNodeIdMap1To2Prm, int[] arrayNodeIdMap2To1Prm)
 		{
 			int cElements = arrayNodeIdMap1To2Prm.Length;
-			arnodeIdMap1To2 = new int[cElements];
-			arnodeIdMap2To1 = new int[cElements];
-			Array.Copy(arrayNodeIdMap1To2Prm, arnodeIdMap1To2, cElements);
-			Array.Copy(arnodeIdMap2To1Prm, arnodeIdMap2To1, cElements);
+			arrayNodeIdMap1To2 = new int[cElements];
+			arrayNodeIdMap2To1 = new int[cElements];
+			Array.Copy(arrayNodeIdMap1To2Prm, arrayNodeIdMap1To2, cElements);
+			Array.Copy(arrayNodeIdMap2To1Prm, arrayNodeIdMap2To1, cElements);
 		}
-		public int[] arnodeIdMap1To2;
-		public int[] arnodeIdMap2To1;
+		public int[] arrayNodeIdMap1To2;
+		public int[] arrayNodeIdMap2To1;
 	}
 
 	class VfState
@@ -202,7 +202,7 @@ namespace VfLib
 			foreach (FullMapping fm in _lstMappings)
 			{
 				FullMapping fmTmp = new FullMapping(count1, count2);
-				MassagePermutations(fm.arnodeIdMap1To2, fm.arnodeIdMap2To1, armpnodeIdGraphnodeIdVf1, armpnodeIdGraphnodeIdVf2, ref fmTmp.arnodeIdMap1To2, ref fmTmp.arnodeIdMap2To1);
+				MassagePermutations(fm.arrayNodeIdMap1To2, fm.arrayNodeIdMap2To1, armpnodeIdGraphnodeIdVf1, armpnodeIdGraphnodeIdVf2, ref fmTmp.arrayNodeIdMap1To2, ref fmTmp.arrayNodeIdMap2To1);
 				_lstfm.Add(fmTmp);
 			}
 		}

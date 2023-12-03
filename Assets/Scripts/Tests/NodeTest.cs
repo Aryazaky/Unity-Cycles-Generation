@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using VfLib;
+using Utilities.VF3;
 
 namespace Tests
 {
@@ -7,12 +7,6 @@ namespace Tests
     {
         private void Start()
         {
-            Graph graph = new Graph();
-            var firstNodeId = graph.InsertNode("test");
-            var secondNodeId = graph.InsertNode("tes again");
-            graph.InsertEdge(firstNodeId, secondNodeId, "an edge");
-
-            VfLib.FullMapping fullMapping = new FullMapping();
         }
     }
 }
