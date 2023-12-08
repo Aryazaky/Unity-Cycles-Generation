@@ -6,19 +6,41 @@ namespace Core.Nodes
 {
     public class Node<T> : INode, INodeTag<T> where T : IComparable<T>
     {
-        private readonly List<INodeEdge> edges = new();
+        private readonly HashSet<INodeEdge<INode>> edges = new();
 
         public Node(params T[] tags)
         {
             Tags = tags;
         }
 
-        public void AddNeighbor(INodeEdge edge)
+        public void AddNeighbor(INodeEdge<INode> edge)
         {
-            edges.Add(edge);
+            if (edge.Contains(this))
+            {
+                // Check if there's an edge in the edges that has the same nodes
+                var existingEdge = edges.FirstOrDefault(edgeInEdges =>
+                    (Equals(edgeInEdges.NodeA, edge.NodeA) && Equals(edgeInEdges.NodeB, edge.NodeB)) ||
+                    (Equals(edgeInEdges.NodeA, edge.NodeB) && Equals(edgeInEdges.NodeB, edge.NodeA)));
+
+                if (existingEdge != null)
+                {
+                    // Replace the existing edge with the new one
+                    edges.Remove(existingEdge);
+                    edges.Add(edge);
+                }
+                else
+                {
+                    // Add the edge to the edges collection if no existing edge is found
+                    edges.Add(edge);
+                }
+            }
+            else
+            {
+                throw new Exception("Neighbors must be, well, neighbors. The edge doesn't contains this node");
+            }
         }
         
-        public IEnumerable<INodeEdge> Edges => edges;
+        public IEnumerable<INodeEdge<INode>> Edges => edges;
 
         public IEnumerable<T> Tags { get; }
         
@@ -65,16 +87,10 @@ namespace Core.Nodes
 
         public override int GetHashCode()
         {
-            // Implementing GetHashCode is necessary when you override Equals
-            // Define a suitable GetHashCode logic based on your equality criteria
             unchecked
             {
                 int hash = GetType().GetHashCode();
-                foreach (var edge in Edges)
-                {
-                    hash = (hash * 31) + edge.GetType().GetHashCode();
-                }
-                return hash;
+                return Edges.Aggregate(hash, (current, edge) => (current * 31) + edge.GetType().GetHashCode());
             }
         }
     }

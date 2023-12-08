@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Core;
-using UnityEngine;
 
 namespace Utilities.VF3
 {

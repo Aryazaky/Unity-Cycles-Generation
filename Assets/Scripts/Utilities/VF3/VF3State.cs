@@ -26,7 +26,7 @@ namespace Utilities.VF3
         public bool IsGoal()
         {
             // Check if all nodes are mapped
-            return !nodeCandidates1.Any();
+            return !nodeCandidates1.Any() && !nodeCandidates2.Any();
         }
 
         public IEnumerable<VF3State<T, TTag>> GetSuccessors()
@@ -72,7 +72,7 @@ namespace Utilities.VF3
 
         private bool AreStructurallyFeasible(INode node1, INode node2)
         {
-            // Check if the nodes have the same degree
+            // Check if the nodes have the same edge count
             return node1.Edges.Count() == node2.Edges.Count();
         }
 

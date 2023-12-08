@@ -5,9 +5,9 @@ namespace Core
 {
     public interface INode
     {
-        IEnumerable<INodeEdge> Edges { get; }
+        IEnumerable<INodeEdge<INode>> Edges { get; }
     }
-    
+
     public interface INodeTag<T> where T : IComparable<T>
     {
         IEnumerable<T> Tags { get; }

@@ -1,6 +1,6 @@
 ﻿namespace Core.Edges
 {
-    public class Edge : INodeEdge
+    public class Edge : INodeEdge<INode>
     {
         public Edge(INode a, INode b)
         {
@@ -12,11 +12,19 @@
         public INode NodeB { get; }
         public INode GetOtherNode(INode node)
         {
-            return node == NodeA 
+            return Equals(node, NodeA) // masih bimbang mau pakai Equals atau ReferenceEquals
                 ? NodeB 
-                : node == NodeB 
+                : Equals(node, NodeB) 
                     ? NodeA 
                     : null;
+        }
+
+        /// <summary>
+        /// Compares by reference
+        /// </summary>
+        public bool Contains(INode node)
+        {
+            return ReferenceEquals(node, NodeA) || ReferenceEquals(node, NodeB);
         }
     }
 }
