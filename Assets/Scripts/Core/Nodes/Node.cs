@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Core.Nodes
 {
-    public class Node<T> : INode, INodeTag<T> where T : IComparable<T>
+    public class Node<T> : INode, INodeTag<T> where T : IEquatable<T>
     {
         private readonly HashSet<INodeEdge<INode>> edges = new();
 

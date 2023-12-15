@@ -4,7 +4,7 @@ using Core;
 
 namespace Utilities.VF3
 {
-    public class VF3<T, TTag> where T : INode where TTag : IComparable<TTag>
+    public class VF3<T, TTag> where T : INode where TTag : IEquatable<TTag>
     {
         public static bool IsIsomorphic(Graph<T> graph1, Graph<T> graph2)
         {

@@ -5,7 +5,7 @@ using Core;
 
 namespace Utilities.VF3
 {
-    public class VF3State<T, TTag> where T : INode where TTag : IComparable<TTag>
+    public class VF3State<T, TTag> where T : INode where TTag : IEquatable<TTag>
     {
         private readonly Graph<T> graph1;
         private readonly Graph<T> graph2;

@@ -1,7 +1,9 @@
 {
     "name": "CyclesGen",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:d2b368f1cd9e87a439a570cc34c2866b"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

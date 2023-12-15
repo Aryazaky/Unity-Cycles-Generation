@@ -1,7 +1,9 @@
 ﻿using System;
+using Core;
 using Core.Edges;
 using Core.Nodes;
 using UnityEngine;
+using VfLib;
 
 namespace Tests
 {
@@ -16,14 +18,14 @@ namespace Tests
             Node<string> b2 = new Node<string>("B", "Second Node", "The V2");
             Node<string> c2 = new Node<string>("C", "The V2");
             Node<string> nodeWithNoTag = new Node<string>();
-            
+
             // equality test (expected true)
             Debug.Log($"A != B: {!Equals(a, b)}");
             Debug.Log($"C == C2: {Equals(c, c2)}");
             Debug.Log($"A2 != NodeWithNoTag: {!Equals(a2, nodeWithNoTag)}");
             
             // connecting with edges
-            Edge ab = new Edge(a, b);
+            Edge ab = new WeightedEdge(a, b, 2);
             Edge bc = new Edge(b, c);
             Edge ac = new Edge(a, c);
             a.AddNeighbor(ab);
@@ -43,7 +45,9 @@ namespace Tests
             b2.AddNeighbor(b2c2);
             c2.AddNeighbor(a2c2);
             c2.AddNeighbor(b2c2);
-            
+
+            Graph<Node<string>> graph = new Graph<Node<string>>(new []{ a, b, c });
+
             // equality test again (expected true)
             Debug.Log($"A != B: {!Equals(a, b)}");
             Debug.Log($"C == C2: {Equals(c, c2)}");
@@ -65,6 +69,10 @@ namespace Tests
             a.AddNeighbor(newAc);
             
             // other tests
+            VfLib.Graph graphVf = new Graph();
+            VfLib.FullMapping fullMapping = new FullMapping();
+            
+            // coba VFLib di visual studio
         }
     }
 }

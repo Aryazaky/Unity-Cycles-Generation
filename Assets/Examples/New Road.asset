@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e4ed2b15ccc4baf85beac98a16cf2e6, type: 3}
+  m_Name: New Road
+  m_EditorClassIdentifier: 
+  tags:
+  - Jr Street
+  nodeA: {fileID: 11400000, guid: 2df328d9a93ef7d42a18bb52099d168d, type: 2}
+  nodeB: {fileID: 11400000, guid: 81f5dbc3bdc2ed24a9a28fa00a2645c7, type: 2}
