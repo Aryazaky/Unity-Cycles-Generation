@@ -69,7 +69,7 @@ namespace Tests
             a.AddNeighbor(newAc);
             
             // other tests
-            VfLib.Graph graphVf = new Graph();
+            VfLib.Graph graphVf = new();
             VfLib.FullMapping fullMapping = new FullMapping();
             
             // coba VFLib di visual studio

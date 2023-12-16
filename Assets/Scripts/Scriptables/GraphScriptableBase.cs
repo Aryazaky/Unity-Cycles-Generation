@@ -8,4 +8,9 @@ namespace Scriptables
     {
         [SerializeField] private TEdge[] edges;
     }
+
+    public abstract class GraphScriptableBase : ScriptableObject
+    {
+        [SerializeField] private EdgeScriptableBase[] edges;
+    }
 }
