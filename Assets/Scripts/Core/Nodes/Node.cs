@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Edges;
+using UnityEngine;
 
 namespace Core.Nodes
 {
     public class Node<T> : INode, INodeTag<T> where T : IEquatable<T>
     {
-        private readonly HashSet<INodeEdge<INode>> edges = new();
+        private readonly HashSet<INodeEdge> edges = new();
 
         public Node(params T[] tags)
         {
             Tags = tags;
         }
 
-        public void AddNeighbor(INodeEdge<INode> edge)
+        public void AddNeighbor(INodeEdge edge)
         {
             if (edge.Contains(this))
             {
@@ -40,7 +42,7 @@ namespace Core.Nodes
             }
         }
         
-        public IEnumerable<INodeEdge<INode>> Edges => edges;
+        public IEnumerable<INodeEdge> Edges => edges;
 
         public IEnumerable<T> Tags { get; }
         
@@ -91,6 +93,41 @@ namespace Core.Nodes
             {
                 int hash = GetType().GetHashCode();
                 return Edges.Aggregate(hash, (current, edge) => (current * 31) + edge.GetType().GetHashCode());
+            }
+        }
+    }
+
+    [Serializable]
+    public class NodeUI
+    {
+        [SerializeField] private Rect box;
+        [SerializeField] private string text;
+
+        public Rect Box => box;
+
+        public string Text => text;
+
+        public NodeUI(Vector2 position, Vector2 size, string text)
+        {
+            box = new Rect(position, size);
+            this.text = text;
+        }
+
+        public void Paint()
+        {
+            GUI.Box(box, text);
+        }
+        
+        public void HandleEvent(Event e)
+        {
+            switch (e.type)
+            {
+                case EventType.MouseDrag:
+                    if (box.Contains(e.mousePosition))
+                    {
+                        box.position += e.delta;
+                    }
+                    break;
             }
         }
     }

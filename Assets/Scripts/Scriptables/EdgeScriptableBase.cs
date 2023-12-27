@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Scriptables
 {
@@ -35,7 +37,8 @@ namespace Scriptables
 
         public NodeScriptableBase NodeA => nodeA;
         public NodeScriptableBase NodeB => nodeB;
-        
+        public IEnumerable<NodeScriptableBase> Nodes => Enumerable.Empty<NodeScriptableBase>().Append(nodeA).Append(nodeB);
+
         private void OnValidate()
         {
             if (nodeA != null && nodeB != null && nodeA.Equals(nodeB))

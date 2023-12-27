@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Core.Edges;
 using UnityEngine;
 
 namespace Scriptables
@@ -15,5 +16,12 @@ namespace Scriptables
         [SerializeField] private EdgeScriptableBase[] edges;
 
         public IEnumerable<EdgeScriptableBase> Edges => edges;
+    }
+
+    public abstract class PositionGraphScriptableBase : ScriptableObject
+    {
+        [SerializeField] private SerializablePositionEdge[] edges;
+
+        public IEnumerable<SerializablePositionEdge> Edges => edges;
     }
 }

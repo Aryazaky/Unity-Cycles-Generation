@@ -4,6 +4,6 @@ namespace Core
 {
     public interface INode
     {
-        IEnumerable<INodeEdge<INode>> Edges { get; }
+        IEnumerable<INodeEdge> Edges { get; }
     }
 }
