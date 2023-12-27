@@ -24,7 +24,7 @@ namespace Scriptables
         [SerializeField] private GraphScriptableBase from;
         [SerializeField] private GraphScriptableBase to;
         
-        public Graph<PositionNode> GetResultingGraph()
+        public Graph GetResultingGraph()
         {
             throw new NotImplementedException();
         }

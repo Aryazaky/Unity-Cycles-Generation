@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Scriptables
 {
@@ -12,5 +13,7 @@ namespace Scriptables
     public abstract class GraphScriptableBase : ScriptableObject
     {
         [SerializeField] private EdgeScriptableBase[] edges;
+
+        public IEnumerable<EdgeScriptableBase> Edges => edges;
     }
 }

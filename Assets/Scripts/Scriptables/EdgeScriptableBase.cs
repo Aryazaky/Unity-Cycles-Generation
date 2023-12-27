@@ -32,6 +32,10 @@ namespace Scriptables
         [SerializeField] private NodeScriptableBase nodeB;
         private NodeScriptableBase previousNodeA;
         private NodeScriptableBase previousNodeB;
+
+        public NodeScriptableBase NodeA => nodeA;
+        public NodeScriptableBase NodeB => nodeB;
+        
         private void OnValidate()
         {
             if (nodeA != null && nodeB != null && nodeA.Equals(nodeB))
