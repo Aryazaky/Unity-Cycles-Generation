@@ -12,7 +12,7 @@ namespace Editor
     public class GraphEditorWindow : EditorWindow
     {
         private PositionGraphScriptableBase graphScriptable;
-        private List<NodeUI> wildNodes = new();
+        private List<NodeGUI> wildNodes = new();
 
         [MenuItem("Window/CyclesGen/Graph Editor")]
         public static GraphEditorWindow OpenGraphEditorWindow()
@@ -62,6 +62,11 @@ namespace Editor
             {
                 node.Paint();
             }
+
+            foreach (var node in wildNodes)
+            {
+                node.Paint();
+            }
         }
 
         private void PaintEdges()
@@ -96,8 +101,8 @@ namespace Editor
 
         private void OnAddNode(Vector2 mousePosition)
         {
-            NodeUI newNodeUI = new NodeUI(mousePosition, new Vector2(100, 100), $"Node {wildNodes.Count}");
-            wildNodes.Add(newNodeUI);
+            NodeGUI newNodeGUI = new NodeGUI(mousePosition, new Vector2(100, 100), $"Node {wildNodes.Count}");
+            wildNodes.Add(newNodeGUI);
         }
     }
 }

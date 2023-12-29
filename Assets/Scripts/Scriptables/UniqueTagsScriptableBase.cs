@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core;
 using UnityEngine;
 
 namespace Scriptables
 {
-    public abstract class UniqueTagsScriptableObject<TTag> : ScriptableObject
+    public abstract class UniqueTagsScriptableBase<TTag> : ScriptableObject, INodeTag<TTag>
     {
         [SerializeField] private TTag[] tags;
         
         public IEnumerable<TTag> Tags => tags.Distinct();
+        public bool ContainsTag(TTag tag)
+        {
+            return tags.Contains(tag);
+        }
 
         private void OnValidate()
         {
@@ -27,5 +32,13 @@ namespace Scriptables
                 Debug.LogWarning($"Duplicate tag found: {duplicateTag}");
             }
         }
+    }
+
+    public abstract class NodeTagScriptable<TTag> : UniqueTagsScriptableBase<TTag>
+    {
+    }
+
+    public abstract class EdgeTagScriptable<TTag> : UniqueTagsScriptableBase<TTag>
+    {
     }
 }

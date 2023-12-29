@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Edges;
-using UnityEngine;
 
 namespace Core.Nodes
 {
@@ -93,41 +92,6 @@ namespace Core.Nodes
             {
                 int hash = GetType().GetHashCode();
                 return Edges.Aggregate(hash, (current, edge) => (current * 31) + edge.GetType().GetHashCode());
-            }
-        }
-    }
-
-    [Serializable]
-    public class NodeUI
-    {
-        [SerializeField] private Rect box;
-        [SerializeField] private string text;
-
-        public Rect Box => box;
-
-        public string Text => text;
-
-        public NodeUI(Vector2 position, Vector2 size, string text)
-        {
-            box = new Rect(position, size);
-            this.text = text;
-        }
-
-        public void Paint()
-        {
-            GUI.Box(box, text);
-        }
-        
-        public void HandleEvent(Event e)
-        {
-            switch (e.type)
-            {
-                case EventType.MouseDrag:
-                    if (box.Contains(e.mousePosition))
-                    {
-                        box.position += e.delta;
-                    }
-                    break;
             }
         }
     }

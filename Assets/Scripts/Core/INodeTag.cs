@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Core
 {
-    public interface INodeTag<T> where T : IEquatable<T>
+    public interface INodeTag<T>
     {
         IEnumerable<T> Tags { get; }
         bool ContainsTag(T tag);

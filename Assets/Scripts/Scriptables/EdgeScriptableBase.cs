@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Scriptables
 {
-    public abstract class EdgeScriptableBase<TNode, TTag> : UniqueTagsScriptableObject<TTag>
+    public abstract class EdgeScriptableBase<TNode, TTag> : EdgeTagScriptable<TTag>
         where TNode : NodeScriptableBase<TTag>
     {
         [SerializeField] private TNode nodeA;

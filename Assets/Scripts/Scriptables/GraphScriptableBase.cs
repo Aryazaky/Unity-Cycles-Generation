@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using Core;
 using Core.Edges;
+using Editor;
 using UnityEngine;
 
 namespace Scriptables
 {
-    public abstract class GraphScriptableBase<TEdge, TNode, TTag> : UniqueTagsScriptableObject<TTag>
+    public abstract class GraphScriptableBase<TEdge, TNode, TTag> : ScriptableObject
         where TEdge : EdgeScriptableBase<TNode, TTag>
         where TNode : NodeScriptableBase<TTag>
     {
@@ -20,8 +22,10 @@ namespace Scriptables
 
     public abstract class PositionGraphScriptableBase : ScriptableObject
     {
-        [SerializeField] private SerializablePositionEdge[] edges;
+        // TODO: Serialize the real edges, but unserialize the GUI. 
+        // TODO: Auto generate GUI based on the real edges
+        [SerializeField] private EdgeGUI[] edges;
 
-        public IEnumerable<SerializablePositionEdge> Edges => edges;
+        public IEnumerable<EdgeGUI> Edges => edges;
     }
 }
